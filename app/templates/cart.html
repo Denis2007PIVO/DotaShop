@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина - Dota Market</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #1e1e1e; color: #fff; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: #2d2d2d; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; }
+        .header a { color: #fff; text-decoration: none; margin-left: 15px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .cart-item { display: flex; justify-content: space-between; background: #2d2d2d; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+        .btn { background: #c23c2a; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; text-decoration: none;}
+        .btn:hover { background: #a03020; }
+        .btn-green { background: #4caf50; }
+        .btn-green:hover { background: #45a049; }
+        .error { color: #ff6b6b; background: #3a1e1e; padding: 10px; border-radius: 4px; margin-bottom: 15px;}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Корзина</h2>
+        <div>
+            <span>Баланс: {{ user.balance }} $</span>
+            <a href="/">Назад в магазин</a>
+            <a href="/logout" style="color: #ff6b6b;">Выйти</a>
+        </div>
+    </div>
+
+    <div class="container">
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if cart_items %}
+            {% for c_item in cart_items %}
+            <div class="cart-item">
+                <div>
+                    <strong>{{ c_item.item.name }}</strong> ({{ c_item.item.hero }})
+                    <br>Кол-во: {{ c_item.quantity }} x {{ c_item.item.price }} $
+                </div>
+                <div>{{ c_item.item.price * c_item.quantity }} $</div>
+            </div>
+            {% endfor %}
+
+            <h3 style="text-align: right;">Итого: {{ total_price }} $</h3>
+            <form action="/cart/checkout" method="post" style="text-align: right;">
+                <button type="submit" class="btn btn-green">Оплатить</button>
+            </form>
+        {% else %}
+            <p>Ваша корзина пуста. <a href="/" style="color: #ff9900;">Перейти к покупкам</a></p>
+        {% endif %}
+    </div>
+</body>
+</html>

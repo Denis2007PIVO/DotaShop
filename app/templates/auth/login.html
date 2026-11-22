@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход - Dota Market</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #1e1e1e; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: #2d2d2d; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); width: 300px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border-radius: 4px; border: 1px solid #444; background: #1e1e1e; color: #fff; }
+        button { width: 100%; padding: 10px; background: #c23c2a; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background: #a03020; }
+        .error { color: #ff6b6b; margin-bottom: 10px; }
+        a { color: #ff9900; text-decoration: none; display: block; margin-top: 15px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Вход в Dota Market</h2>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="Логин (например, alice)" required>
+            <input type="password" name="password" placeholder="Пароль (password123)" required>
+            <button type="submit">Войти</button>
+        </form>
+
+      <a href="/register">Нет аккаунта? Зарегистрироваться</a>
+    </div>
+</body>
+</html>

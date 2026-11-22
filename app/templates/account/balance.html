@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Баланс — Dota Market{% endblock %}
+{% block content %}
+<h1>Баланс</h1>
+<p>Текущий баланс: <strong>{{ user.balance }}</strong></p>
+<form action="{{ url_for('top_up') }}" method="post">
+  <label>Сумма пополнения <input type="number" name="amount" min="0.01" step="0.01" required></label>
+  <button type="submit">Пополнить</button>
+</form>
+{% endblock %}

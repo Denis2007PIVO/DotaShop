@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Dota Market{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+<header>
+  <nav>
+    <a href="{{ url_for('items_page') }}">Маркет</a>
+    {% if user %}
+      <a href="{{ url_for('cart_page') }}">Корзина</a>
+      <a href="{{ url_for('balance_page') }}">Баланс: {{ user.balance }}</a>
+      <a href="{{ url_for('history_page') }}">История</a>
+      <form class="inline" action="{{ url_for('logout') }}" method="post">
+        <button type="submit">Выйти</button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('login_page') }}">Войти</a>
+      <a href="{{ url_for('register_page') }}">Регистрация</a>
+    {% endif %}
+  </nav>
+</header>
+<main>
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Корзина — Dota Market{% endblock %}
+{% block content %}
+<h1>Корзина</h1>
+{% if cart.items %}
+  <table>
+    <thead><tr><th>Предмет</th><th>Цена</th><th>Кол-во</th><th>Сумма</th><th></th></tr></thead>
+    <tbody>
+      {% for line in cart.items %}
+        <tr>
+          <td>{{ line.name }}</td>
+          <td>{{ line.unit_price }}</td>
+          <td>
+            <form class="inline" action="{{ url_for('cart_update', item_id=line.item_id) }}" method="post">
+              <input type="number" name="quantity" value="{{ line.quantity }}" min="1" required>
+              <button type="submit">Обновить</button>
+            </form>
+          </td>
+          <td>{{ line.line_total }}</td>
+          <td>
+            <form class="inline" action="{{ url_for('cart_remove', item_id=line.item_id) }}" method="post">
+              <button type="submit">Удалить</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p>Итого: <strong>{{ cart.total }}</strong></p>
+  <form action="{{ url_for('checkout') }}" method="post">
+    <button type="submit">Оформить заказ</button>
+  </form>
+{% else %}
+  <p>Корзина пуста.</p>
+{% endif %}
+{% endblock %}

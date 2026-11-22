@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Dota Market - Витрина</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #1e1e1e; color: #fff; margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: #2d2d2d; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; }
+        .header h1 { margin: 0; color: #c23c2a; }
+        .nav-links a { color: #fff; text-decoration: none; margin-left: 15px; font-weight: bold; }
+        .nav-links a:hover { color: #ff9900; }
+        .balance { color: #4caf50; font-weight: bold; font-size: 1.2em; margin-right: 20px;}
+
+        /* Стили для фильтров */
+        .filters { background: #2d2d2d; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; }
+        .filters form { display: flex; gap: 15px; align-items: flex-end; width: 100%; flex-wrap: wrap; }
+        .filters label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; }
+        .filters input, .filters select { padding: 8px; border-radius: 4px; border: none; background: #1e1e1e; color: #fff; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .card { background: #2d2d2d; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; }
+        .card h3 { margin-top: 0; color: #ff9900; }
+        .card .rarity { font-size: 0.9em; color: #aaa; }
+        .card .price { font-size: 1.2em; font-weight: bold; color: #4caf50; margin: 10px 0; }
+        .btn { background: #c23c2a; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; text-align: center; text-decoration: none; display: block; width: 100%; box-sizing: border-box;}
+        .btn:hover { background: #a03020; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Dota Market</h1>
+        <div class="nav-links" style="display: flex; align-items: center;">
+                        <span style="margin-right: 15px; color: #aaa;">
+                Вы вошли как: <strong style="color: #fff;">{{ user.username }}</strong>
+            </span>
+            <span class="balance" style="margin-right: 15px;">Баланс: {{ user.balance }} $</span>
+
+            <!-- Форма пополнения баланса -->
+            <form action="/balance/topup" method="post" style="display: flex; align-items: center; margin-right: 15px;">
+                <input type="number" name="amount" min="1" value="100" style="width: 60px; padding: 5px; border-radius: 4px; border: none; margin-right: 5px;">
+                <button type="submit" style="background: #4caf50; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Пополнить</button>
+            </form>
+
+            <a href="/cart">Корзина</a>
+            <a href="/history">История</a>
+            <a href="/logout" style="color: #ff6b6b;">Выйти</a>
+        </div>
+    </div>
+
+    <!-- Панель фильтров -->
+    <div class="filters">
+        <form action="/" method="get">
+            <div>
+                <label>Поиск</label>
+                <input type="text" name="search" value="{{ search_query }}" placeholder="Название предмета..." style="width: 200px;">
+            </div>
+
+            <div>
+                <label>Редкость</label>
+                <select name="rarity">
+                    <option value="All" {% if current_rarity == 'All' %}selected{% endif %}>Все</option>
+                    <option value="Common" {% if current_rarity == 'Common' %}selected{% endif %}>Common</option>
+                    <option value="Rare" {% if current_rarity == 'Rare' %}selected{% endif %}>Rare</option>
+                    <option value="Legendary" {% if current_rarity == 'Legendary' %}selected{% endif %}>Legendary</option>
+                    <option value="Immortal" {% if current_rarity == 'Immortal' %}selected{% endif %}>Immortal</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Цена</label>
+                <select name="sort">
+                    <option value="" {% if current_sort == '' %}selected{% endif %}>По умолчанию</option>
+                    <option value="asc" {% if current_sort == 'asc' %}selected{% endif %}>По возрастанию</option>
+                    <option value="desc" {% if current_sort == 'desc' %}selected{% endif %}>По убыванию</option>
+                </select>
+            </div>
+
+            <button type="submit" style="padding: 8px 15px; background: #c23c2a; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Применить</button>
+            <a href="/" style="padding: 8px 15px; background: #444; color: #fff; text-decoration: none; border-radius: 4px; font-size: 14px; display: inline-block;">Сбросить</a>
+        </form>
+    </div>
+
+    <!-- Сетка товаров -->
+    <div class="grid">
+        {% for item in items %}
+        <div class="card">
+            <div>
+                <h3>{{ item.name }}</h3>
+                <div class="rarity">Герой: {{ item.hero }} | Редкость: {{ item.rarity }}</div>
+                <div class="price">{{ item.price }} $</div>
+                <div style="font-size: 0.8em; color: #888;">В наличии: {{ item.stock }} шт.</div>
+            </div>
+            <form action="/cart/add/{{ item.id }}" method="post" style="margin-top: 15px;">
+                <button type="submit" class="btn">В корзину</button>
+            </form>
+        </div>
+        {% else %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #aaa;">
+            <h3>По вашему запросу ничего не найдено 😔</h3>
+            <p>Попробуйте изменить параметры фильтрации.</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

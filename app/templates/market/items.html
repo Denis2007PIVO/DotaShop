@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Маркет — Dota Market{% endblock %}
+{% block content %}
+<h1>Предметы</h1>
+{% if items %}
+  <div class="grid">
+    {% for item in items %}
+      <article class="card">
+        <h2><a href="{{ url_for('item_page', item_id=item.id) }}">{{ item.name }}</a></h2>
+        <p>{{ item.description }}</p>
+        <p>Цена: {{ item.price }} | В наличии: {{ item.stock }}</p>
+        <form action="{{ url_for('item_add', item_id=item.id) }}" method="post">
+          <input type="number" name="quantity" value="1" min="1" max="{{ item.stock }}" required>
+          <button type="submit" {% if item.stock == 0 %}disabled{% endif %}>В корзину</button>
+        </form>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Предметов пока нет.</p>
+{% endif %}
+{% endblock %}
